@@ -1,0 +1,2536 @@
+[
+  工具调用
+] 写入文件 package.json
+```json
+{
+"name": "creative-portfolio",
+"private": true,
+"version": "1.0.0",
+"type": "module",
+"scripts": {
+"dev": "vite",
+"build": "vite build",
+"preview": "vite preview"
+},
+"dependencies": {
+"vue": "^3.3.4",
+"vue-router": "^4.2.4"
+},
+"devDependencies": {
+"@vitejs/plugin-vue": "^4.2.3",
+"vite": "^4.4.5"
+}
+}
+```
+
+
+
+
+[工具调用] 写入文件 vite.config.js
+```js
+import {defineConfig} from 'vite'
+import vue from '@vitejs/plugin-vue'
+import {fileURLToPath, URL} from 'node:url'
+
+export default defineConfig({
+base: './',
+plugins: [vue()],
+resolve: {
+alias: {
+'@': fileURLToPath(new URL('./src', import.meta.url))
+}
+}
+})
+```
+
+
+
+
+[工具调用] 写入文件 index.html
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" type="image/svg+xml" href="/vite.svg" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>创意作品集 - 展示您的艺术才华</title>
+<meta name="description" content="专业的创意作品展示平台，适合设计师、摄影师、艺术家展示作品" />
+</head>
+<body>
+<div id="app"></div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
+```
+
+
+
+
+[工具调用] 写入文件 src/main.js
+```js
+import {createApp} from 'vue'
+import App from './App.vue'
+import router from './router'
+
+import './styles/main.css'
+
+const app = createApp(App)
+app.use(router)
+app.mount('#app')
+```
+
+
+
+
+[工具调用] 写入文件 src/router/index.js
+```js
+import {createRouter, createWebHashHistory} from 'vue-router'
+import Home from '@/pages/Home.vue'
+import Gallery from '@/pages/Gallery.vue'
+import About from '@/pages/About.vue'
+import Contact from '@/pages/Contact.vue'
+
+const routes = [
+{
+path: '/',
+name: 'Home',
+component: Home
+},
+{
+path: '/gallery',
+name: 'Gallery',
+component: Gallery
+},
+{
+path: '/about',
+name: 'About',
+component: About
+},
+{
+path: '/contact',
+name: 'Contact',
+component: Contact
+}
+]
+
+const router = createRouter({
+history: createWebHashHistory(),
+routes
+})
+
+export default router
+```
+
+
+
+
+[工具调用] 写入文件 src/App.vue
+```vue
+<template>
+<div id="app">
+<Header />
+<main class="main-content">
+<router-view />
+</main>
+<Footer />
+</div>
+</template>
+
+<script setup>
+import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
+</script>
+
+<style scoped>
+.main-content {
+min-height: calc(100vh - 160px);
+padding-top: 80px;
+}
+</style>
+```
+
+
+
+
+[工具调用] 写入文件 src/components/Header.vue
+```vue
+<template>
+<header class="header">
+<div class="container">
+<div class="logo">
+<router-link to="/" class="logo-link">
+<h1>创意空间</h1>
+<span>Creative Studio</span>
+</router-link>
+</div>
+
+<nav class="nav">
+<router-link
+v-for="item in navItems": key="item.path"
+: to="item.path"
+class="nav-link"
+active-class="active"
+>
+{{ item.label}}
+</router-link>
+</nav>
+
+<button class="mobile-menu-btn" @click="toggleMobileMenu">
+<span></span>
+<span></span>
+<span></span>
+</button>
+</div>
+
+<div class="mobile-menu":class="{ active: isMobileMenuOpen }">
+<router-link
+v-for="item in navItems": key="item.path":to="item.path"
+class="mobile-nav-link"
+@click="closeMobileMenu"
+>
+{
+{
+item.label }}
+</router-link>
+</div>
+</header>
+</template>
+
+<script setup>
+import { ref} from 'vue'
+
+const isMobileMenuOpen = ref(false)
+
+const navItems = [
+{path: '/', label: '首页'},
+{path: '/gallery', label: '作品集'},
+{path: '/about', label: '关于我'},
+{path: '/contact', label: '联系我'}
+]
+
+const toggleMobileMenu = () => {
+isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
+
+const closeMobileMenu = () => {
+isMobileMenuOpen.value = false
+}
+</script>
+
+<style scoped>
+.header {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+background: rgba(255, 255, 255, 0.95);
+backdrop-filter: blur(10px);
+border-bottom: 1px solid #eee;
+z-index: 1000;
+padding: 1rem 0;
+}
+
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 2rem;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.logo-link {
+text-decoration: none;
+color: #333;
+}
+
+.logo h1 {
+font-size: 1.8rem;
+font-weight: 700;
+margin: 0;
+}
+
+.logo span {
+font-size: 0.9rem;
+color: #666;
+}
+
+.nav {
+display: flex;
+gap: 2rem;
+}
+
+.nav-link {
+text-decoration: none;
+color: #333;
+font-weight: 500;
+padding: 0.5rem 1rem;
+border-radius: 20px;
+transition: all 0.3s ease;
+}
+
+.nav-link: hover,
+.nav-link.active {
+background: #007bff;
+color: white;
+}
+
+.mobile-menu-btn {
+display: none;
+flex-direction: column;
+gap: 4px;
+background: none;
+border: none;
+cursor: pointer;
+padding: 0.5rem;
+}
+
+.mobile-menu-btn span {
+width: 24px;
+height: 2px;
+background: #333;
+transition: all 0.3s ease;
+}
+
+.mobile-menu {
+display: none;
+position: absolute;
+top: 100%;
+left: 0;
+right: 0;
+background: white;
+border-top: 1px solid #eee;
+padding: 1rem 2rem;
+flex-direction: column;
+gap: 1rem;
+transform: translateY(-100%);
+opacity: 0;
+transition: all 0.3s ease;
+}
+
+.mobile-menu.active {
+transform: translateY(0);
+opacity: 1;
+}
+
+.mobile-nav-link {
+text-decoration: none;
+color: #333;
+font-weight: 500;
+padding: 0.5rem 0;
+border-bottom: 1px solid #eee;
+}
+
+@media (max-width: 768px) {
+.nav {
+display: none;
+}
+
+.mobile-menu-btn {
+display: flex;
+}
+
+.mobile-menu {
+display: flex;
+}
+}
+</style>
+```
+
+
+
+
+[工具调用] 写入文件 src/components/Footer.vue
+```vue
+<template>
+<footer class="footer">
+<div class="container">
+<div class="footer-content">
+<div class="footer-section">
+<h3>创意空间</h3>
+<p>专注于展示优秀的创意作品，为艺术家、设计师和摄影师提供专业的展示平台。</p>
+</div>
+
+<div class="footer-section">
+<h4>快速链接</h4>
+<router-link to="/">首页</router-link>
+<router-link to="/gallery">作品集</router-link>
+<router-link to="/about">关于我</router-link>
+<router-link to="/contact">联系我</router-link>
+</div>
+
+<div class="footer-section">
+<h4>联系方式</h4>
+<p>📧 contact@creative-studio.com</p>
+<p>📞 +86 138 0013 8000</p>
+<p>📍 北京市朝阳区创意园区</p>
+</div>
+
+<div class="footer-section">
+<h4>关注我们</h4>
+<div class="social-links">
+<a href="#" class="social-link">微博</a>
+<a href="#" class="social-link">微信</a>
+<a href="#" class="social-link">知乎</a>
+<a href="#" class="social-link">小红书</a>
+</div>
+</div>
+</div>
+
+<div class="footer-bottom">
+<p>&copy; 2024 创意空间. 保留所有权利.</p>
+</div>
+</div>
+</footer>
+</template>
+
+<script setup>
+</script>
+
+<style scoped>
+.footer {
+background: #333;
+color: white;
+padding: 3rem 0 1rem;
+}
+
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 2rem;
+}
+
+.footer-content {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 2rem;
+margin-bottom: 2rem;
+}
+
+.footer-section h3,
+.footer-section h4 {
+margin-bottom: 1rem;
+color: #fff;
+}
+
+.footer-section p {
+color: #ccc;
+line-height: 1.6;
+margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+display: block;
+color: #ccc;
+text-decoration: none;
+margin-bottom: 0.5rem;
+transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+color: #007bff;
+}
+
+.social-links {
+display: flex;
+gap: 1rem;
+flex-wrap: wrap;
+}
+
+.social-link {
+padding: 0.5rem 1rem;
+background: #555;
+border-radius: 20px;
+transition: background 0.3s ease;
+}
+
+.social-link: hover {
+background: #007bff;
+}
+
+.footer-bottom {
+border-top: 1px solid #555;
+padding-top: 1rem;
+text-align: center;
+color: #999;
+}
+
+@media (max-width: 768px) {
+.footer-content {
+grid-template-columns: 1fr;
+text-align: center;
+}
+
+.social-links {
+justify-content: center;
+}
+}
+</style>
+```
+
+
+
+
+[工具调用] 写入文件 src/components/GalleryItem.vue
+```vue
+<template>
+<div class="gallery-item" @click="openModal">
+<div class="gallery-item-image">
+<img: src="item.image": alt="item.title" loading="lazy" />
+<div class="gallery-item-overlay">
+<h3>{
+{
+item.title
+}
+}</h3>
+<p>{{
+item.category
+}
+}</p>
+</div>
+</div>
+</div>
+</template>
+
+<script setup>
+const props = defineProps({
+item: {
+type: Object,
+required: true
+}
+})
+
+const emit = defineEmits(['item-click'])
+
+const openModal = () => {
+emit('item-click', props.item)
+}
+</script>
+
+<style scoped>
+.gallery-item {
+break-inside: avoid;
+margin-bottom: 1.5rem;
+cursor: pointer;
+transition: transform 0.3s ease;
+}
+
+.gallery-item: hover {
+transform: translateY(-4px);
+}
+
+.gallery-item-image {
+position: relative;
+overflow: hidden;
+border-radius: 12px;
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-item-image img {
+width: 100%;
+height: auto;
+display: block;
+transition: transform 0.3s ease;
+}
+
+.gallery-item: hover .gallery-item-image img {
+transform: scale(1.05);
+}
+
+.gallery-item-overlay {
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+color: white;
+padding: 1.5rem 1rem 1rem;
+opacity: 0;
+transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover .gallery-item-overlay {
+opacity: 1;
+}
+
+.gallery-item-overlay h3 {
+margin: 0 0 0.5rem 0;
+font-size: 1.1rem;
+font-weight: 600;
+}
+
+.gallery-item-overlay p {
+margin: 0;
+font-size: 0.9rem;
+opacity: 0.9;
+}
+</style>
+```
+
+
+
+
+[工具调用] 写入文件 src/components/Modal.vue
+```vue
+<template>
+<transition name="modal">
+<div v-if="isOpen" class="modal-overlay" @click.self="close">
+<div class="modal-content">
+<button class="modal-close" @click="close">×</button>
+
+<div class="modal-body">
+<div class="modal-image">
+<img : src="item.image": alt="item.title" />
+</div>
+
+<div class="modal-info">
+<h2>{
+{
+item.title
+}
+}</h2>
+<p class="modal-category">{{item.category}}</p>
+<p class="modal-description">{{item.description}}</p>
+
+<div class="modal-meta">
+<div class="meta-item">
+<span class="meta-label">创作时间: </span>
+<span class="meta-value">{
+{
+item.date }}</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">使用工具: </span>
+<span class="meta-value">{
+{ item.tools}}</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</transition>
+</template>
+
+<script setup>
+import {ref, watch} from 'vue'
+
+const props = defineProps({
+isOpen: {
+type: Boolean,
+required: true
+},
+item: {
+type: Object,
+default: null
+}
+})
+
+const emit = defineEmits(['close'])
+
+const close = () => {
+emit('close')
+}
+
+// 监听 ESC 键关闭模态框
+const handleKeydown = (event) => {
+if (event.key === 'Escape') {
+close()
+}
+}
+
+watch(() => props.isOpen, (newVal) => {
+if (newVal) {
+document.addEventListener('keydown', handleKeydown)
+document.body.style.overflow = 'hidden'
+} else {
+document.removeEventListener('keydown', handleKeydown)
+document.body.style.overflow = 'auto'
+}
+})
+</script>
+
+<style scoped>
+.modal-overlay {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0, 0, 0, 0.8);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 2000;
+padding: 2rem;
+}
+
+.modal-content {
+background: white;
+border-radius: 16px;
+max-width: 900px;
+width: 100%;
+max-height: 90vh;
+overflow: hidden;
+position: relative;
+}
+
+.modal-close {
+position: absolute;
+top: 1rem;
+right: 1rem;
+background: rgba(0, 0, 0, 0.5);
+color: white;
+border: none;
+border-radius: 50%;
+width: 40px;
+height: 40px;
+font-size: 1.5rem;
+cursor: pointer;
+z-index: 10;
+transition: background 0.3s ease;
+}
+
+.modal-close:hover {
+background: rgba(0, 0, 0, 0.7);
+}
+
+.modal-body {
+display: grid;
+grid-template-columns: 1fr 1fr;
+height: 100%;
+}
+
+.modal-image {
+overflow: hidden;
+}
+
+.modal-image img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+.modal-info {
+padding: 2rem;
+overflow-y: auto;
+}
+
+.modal-info h2 {
+margin: 0 0 0.5rem 0;
+color: #333;
+font-size: 1.8rem;
+}
+
+.modal-category {
+color: #007bff;
+font-weight: 600;
+margin: 0 0 1.5rem 0;
+}
+
+.modal-description {
+color: #666;
+line-height: 1.6;
+margin-bottom: 2rem;
+}
+
+.modal-meta {
+border-top: 1px solid #eee;
+padding-top: 1.5rem;
+}
+
+.meta-item {
+display: flex;
+justify-content: space-between;
+margin-bottom: 0.8rem;
+}
+
+.meta-label {
+font-weight: 600;
+color: #333;
+}
+
+.meta-value {
+color: #666;
+}
+
+.modal-enter-active,
+.modal-leave-active {
+transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+opacity: 0;
+}
+
+@media (max-width: 768px) {
+.modal-overlay {
+padding: 1rem;
+}
+
+.modal-body {
+grid-template-columns: 1fr;
+grid-template-rows: auto 1fr;
+}
+
+.modal-image {
+height: 300px;
+}
+
+.modal-info {
+padding: 1.5rem;
+}
+
+.modal-info h2 {
+font-size: 1.5rem;
+}
+}
+</style>
+```
+
+
+
+
+[工具调用] 写入文件 src/pages/Home.vue
+```vue
+<template>
+<div class="home">
+<!-- Hero Section -->
+<section class="hero">
+<div class="hero-content">
+<h1>创意无限，设计未来</h1>
+<p>探索视觉艺术的无限可能，让每一个创意都绽放光彩</p>
+<div class="hero-buttons">
+<router-link to="/gallery" class="btn btn-primary">浏览作品</router-link>
+<router-link to="/contact" class="btn btn-secondary">联系合作</router-link>
+</div>
+</div>
+<div class="hero-image">
+<img src="https://picsum.photos/600/400?random=1" alt="创意设计展示" />
+</div>
+</section>
+
+<!-- Featured Works -->
+<section class="featured-works">
+<div class="container">
+<h2>精选作品</h2>
+<p class="section-subtitle">探索我们最受欢迎的设计作品</p>
+
+<div class="works-grid">
+<div
+v-for="(work, index) in featuredWorks": key="index"
+class="work-card"
+@click="openWorkModal(work)"
+>
+<div class="work-image">
+<img: src="work.image":alt="work.title" />
+<div class="work-overlay">
+<h3>{
+{ work.title}}</h3>
+<p>{{work.category}}</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="view-all">
+<router-link to="/gallery" class="btn btn-outline">查看全部作品</router-link>
+</div>
+</div>
+</section>
+
+<!-- Services -->
+<section class="services">
+<div class="container">
+<h2>我们的服务</h2>
+<p class="section-subtitle">专业的设计服务，满足您的各种需求</p>
+
+<div class="services-grid">
+<div class="service-card">
+<div class="service-icon">🎨</div>
+<h3>平面设计</h3>
+<p>专业的品牌标识、海报、宣传册设计，打造独特的视觉形象</p>
+</div>
+
+<div class="service-card">
+<div class="service-icon">📱</div>
+<h3>UI/UX设计</h3>
+<p>用户体验优先的界面设计，创造直观易用的数字产品</p>
+</div>
+
+<div class="service-card">
+<div class="service-icon">📸</div>
+<h3>摄影服务</h3>
+<p>专业的商业摄影和人像摄影，捕捉每一个精彩瞬间</p>
+</div>
+
+<div class="service-card">
+<div class="service-icon">🚀</div>
+<h3>品牌策划</h3>
+<p>完整的品牌策略规划，从定位到视觉系统的全面服务</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Stats -->
+<section class="stats">
+<div class="container">
+<div class="stats-grid">
+<div class="stat-item">
+<div class="stat-number">500+</div>
+<div class="stat-label">完成项目</div>
+</div>
+<div class="stat-item">
+<div class="stat-number">100+</div>
+<div class="stat-label">满意客户</div>
+</div>
+<div class="stat-item">
+<div class="stat-number">5+</div>
+<div class="stat-label">行业经验</div>
+</div>
+<div class="stat-item">
+<div class="stat-number">99%</div>
+<div class="stat-label">客户满意度</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Modal -->
+<Modal:is-open="isModalOpen": item="selectedWork"
+@close="closeModal"
+/>
+</div>
+</template>
+
+<script setup>
+import {ref} from 'vue'
+import Modal from '@/components/Modal.vue'
+
+const isModalOpen = ref(false)
+const selectedWork = ref(null)
+
+const featuredWorks = [
+{
+title: '现代品牌标识设计',
+category: '品牌设计',
+image: 'https://picsum.photos/400/300?random=2',
+description: '为科技公司设计的现代化品牌标识，融合了创新与专业的元素，体现了公司的核心价值和技术实力。',
+date: '2024-01-15',
+tools: 'Adobe Illustrator, Photoshop'
+},
+{
+title: '移动应用界面设计',
+category: 'UI/UX设计',
+image: 'https://picsum.photos/400/300?random=3',
+description: '为金融科技应用设计的用户界面，注重用户体验和功能性的完美结合，提供流畅的操作体验。',
+date: '2024-02-20',
+tools: 'Figma, Sketch, Adobe XD'
+},
+{
+title: '商业摄影作品',
+category: '摄影',
+image: 'https://picsum.photos/400/300?random=4',
+description: '为时尚品牌拍摄的商业摄影作品，展现了产品的精致细节和品牌的高端定位。',
+date: '2024-03-10',
+tools: 'Canon EOS R5, Adobe Lightroom'
+}
+]
+
+const openWorkModal = (work) => {
+selectedWork.value = work
+isModalOpen.value = true
+}
+
+const closeModal = () => {
+isModalOpen.value = false
+selectedWork.value = null
+}
+</script>
+
+<style scoped>
+.home {
+padding-bottom: 4rem;
+}
+
+.hero {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 4rem;
+align-items: center;
+padding: 4rem 2rem;
+max-width: 1200px;
+margin: 0 auto;
+}
+
+.hero-content h1 {
+font-size: 3rem;
+font-weight: 700;
+margin-bottom: 1rem;
+color: #333;
+}
+
+.hero-content p {
+font-size: 1.2rem;
+color: #666;
+margin-bottom: 2rem;
+line-height: 1.6;
+}
+
+.hero-buttons {
+display: flex;
+gap: 1rem;
+}
+
+.btn {
+padding: 0.8rem 2rem;
+border-radius: 25px;
+text-decoration: none;
+font-weight: 600;
+transition: all 0.3s ease;
+display: inline-block;
+}
+
+.btn-primary {
+background: #007bff;
+color: white;
+border: 2px solid #007bff;
+}
+
+.btn-primary: hover {
+background: #0056b3;
+border-color: #0056b3;
+}
+
+.btn-secondary {
+background: transparent;
+color: #007bff;
+border: 2px solid #007bff;
+}
+
+.btn-secondary: hover {
+background: #007bff;
+color: white;
+}
+
+.btn-outline {
+background: transparent;
+color: #333;
+border: 2px solid #333;
+}
+
+.btn-outline: hover {
+background: #333;
+color: white;
+}
+
+.hero-image img {
+width: 100%;
+height: auto;
+border-radius: 16px;
+box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 2rem;
+}
+
+.featured-works,
+.services,
+.stats {
+padding: 4rem 0;
+}
+
+.featured-works {
+background: #f8f9fa;
+}
+
+h2 {
+text-align: center;
+font-size: 2.5rem;
+margin-bottom: 1rem;
+color: #333;
+}
+
+.section-subtitle {
+text-align: center;
+color: #666;
+margin-bottom: 3rem;
+font-size: 1.1rem;
+}
+
+.works-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 2rem;
+margin-bottom: 3rem;
+}
+
+.work-card {
+cursor: pointer;
+transition: transform 0.3s ease;
+}
+
+.work-card: hover {
+transform: translateY(-8px);
+}
+
+.work-image {
+position: relative;
+overflow: hidden;
+border-radius: 12px;
+box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.work-image img {
+width: 100%;
+height: 250px;
+object-fit: cover;
+transition: transform 0.3s ease;
+}
+
+.work-card: hover .work-image img {
+transform: scale(1.05);
+}
+
+.work-overlay {
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+color: white;
+padding: 1.5rem;
+opacity: 0;
+transition: opacity 0.3s ease;
+}
+
+.work-card: hover .work-overlay {
+opacity: 1;
+}
+
+.work-overlay h3 {
+margin: 0 0 0.5rem 0;
+font-size: 1.2rem;
+}
+
+.work-overlay p {
+margin: 0;
+color: #ccc;
+}
+
+.view-all {
+text-align: center;
+}
+
+.services-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 2rem;
+}
+
+.service-card {
+text-align: center;
+padding: 2rem;
+background: white;
+border-radius: 12px;
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+transform: translateY(-4px);
+}
+
+.service-icon {
+font-size: 3rem;
+margin-bottom: 1rem;
+}
+
+.service-card h3 {
+margin-bottom: 1rem;
+color: #333;
+}
+
+.service-card p {
+color: #666;
+line-height: 1.6;
+}
+
+.stats {
+background: #007bff;
+color: white;
+}
+
+.stats-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 2rem;
+text-align: center;
+}
+
+.stat-item {
+padding: 1rem;
+}
+
+.stat-number {
+font-size: 2.5rem;
+font-weight: 700;
+margin-bottom: 0.5rem;
+}
+
+.stat-label {
+font-size: 1.1rem;
+opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+.hero {
+grid-template-columns: 1fr;
+text-align: center;
+padding: 2rem 1rem;
+}
+
+.hero-content h1 {
+font-size: 2.2rem;
+}
+
+.hero-buttons {
+justify-content: center;
+flex-wrap: wrap;
+}
+
+.works-grid {
+grid-template-columns: 1fr;
+}
+
+.services-grid {
+grid-template-columns: 1fr;
+}
+
+.stats-grid {
+grid-template-columns: repeat(2, 1fr);
+}
+}
+</style>
+```
+
+
+
+
+[工具调用] 写入文件 src/pages/Gallery.vue
+```vue
+<template>
+<div class="gallery">
+<div class="container">
+<div class="gallery-header">
+<h1>作品集</h1>
+<p>探索我们的创意作品，每一个项目都是用心打造的精品</p>
+
+<div class="filter-controls">
+<button
+v-for="category in categories"
+: key="category": class="['filter-btn', { active: selectedCategory === category }]"
+@click="filterByCategory(category)"
+>
+{{
+category
+}
+}
+</button>
+</div>
+</div>
+
+<div class="gallery-grid">
+<GalleryItem
+v-for="(item, index) in filteredItems": key="index": item="item"
+@item-click="openModal"
+/>
+</div>
+
+<div v-if="filteredItems.length === 0" class="no-results">
+<p>暂无该分类的作品</p>
+</div>
+</div>
+
+<Modal: is-open="isModalOpen": item="selectedItem"
+@close="closeModal"
+/>
+</div>
+</template>
+
+<script setup>
+import {ref, computed
+} from 'vue'
+import GalleryItem from '@/components/GalleryItem.vue'
+import Modal from '@/components/Modal.vue'
+
+const isModalOpen = ref(false)
+const selectedItem = ref(null)
+const selectedCategory = ref('全部')
+
+const categories = ['全部', '品牌设计', 'UI/UX设计', '摄影', '插画', '包装设计']
+
+const galleryItems = [
+{
+title: '现代科技品牌标识',
+category: '品牌设计',
+image: 'https://picsum.photos/400/500?random=10',
+description: '为创新型科技公司设计的现代化品牌标识，融合了科技感和专业性的设计元素，体现了公司的创新精神和专业实力。',
+date: '2024-01-15',
+tools: 'Adobe Illustrator, Photoshop'
+},
+{
+title: '金融应用界面设计',
+category: 'UI/UX设计',
+image: 'https://picsum.photos/400/500?random=11',
+description: '为金融科技公司设计的移动应用界面，注重用户体验和安全性，提供直观易用的操作界面和流畅的用户体验。',
+date: '2024-02-20',
+tools: 'Figma, Adobe XD'
+},
+{
+title: '自然风光摄影',
+category: '摄影',
+image: 'https://picsum.photos/400/500?random=12',
+description: '在黄山拍摄的自然风光作品，捕捉了日出时分的壮丽景色和云雾缭绕的山峰，展现了自然的鬼斧神工。',
+date: '2024-03-05',
+tools: 'Canon EOS R5, Lightroom'
+},
+{
+title: '数字艺术插画',
+category: '插画',
+image: 'https://picsum.photos/400/500?random=13',
+description: '数字艺术风格的插画作品，融合了传统绘画技巧和现代数字技术，创造出独特的视觉艺术效果。',
+date: '2024-03-15',
+tools: 'Procreate, Photoshop'
+},
+{
+title: '高端产品包装',
+category: '包装设计',
+image: 'https://picsum.photos/400/500?random=14',
+description: '为奢侈品牌设计的产品包装，采用优质材料和精致工艺，体现了品牌的高端定位和卓越品质。',
+date: '2024-04-01',
+tools: 'Illustrator, InDesign'
+},
+{
+title: '企业品牌形象设计',
+category: '品牌设计',
+image: 'https://picsum.photos/400/500?random=15',
+description: '为传统企业设计的现代化品牌形象，在保留传统元素的同时融入现代设计理念，实现品牌的转型升级。',
+date: '2024-04-10',
+tools: 'Illustrator, Photoshop'
+},
+{
+title: '电商平台设计',
+category: 'UI/UX设计',
+image: 'https://picsum.photos/400/500?random=16',
+description: '大型电商平台的用户界面设计，注重购物体验和转化率优化，提供流畅的浏览和购买流程。',
+date: '2024-04-20',
+tools: 'Sketch, Figma'
+},
+{
+title: '人像摄影作品',
+category: '摄影',
+image: 'https://picsum.photos/400/500?random=17',
+description: '专业的人像摄影作品，通过光影和构图的精心设计，展现人物的独特气质和情感表达。',
+date: '2024-05-01',
+tools: 'Sony A7R4, Lightroom'
+},
+{
+title: '儿童绘本插画',
+category: '插画',
+image: 'https://picsum.photos/400/500?random=18',
+description: '为儿童绘本创作的插画作品，色彩鲜艳、形象可爱，充满童趣和想象力，深受小朋友喜爱。',
+date: '2024-05-10',
+tools: 'Procreate, Photoshop'
+}
+]
+
+const filteredItems = computed(() => {
+if (selectedCategory.value === '全部') {
+return galleryItems
+}
+return galleryItems.filter(item => item.category === selectedCategory.value)
+})
+
+const filterByCategory = (category) => {
+selectedCategory.value = category
+}
+
+const openModal = (item) => {
+selectedItem.value = item
+isModalOpen.value = true
+}
+
+const closeModal = () => {
+isModalOpen.value = false
+selectedItem.value = null
+}
+</script>
+
+<style scoped>
+.gallery {
+padding: 2rem 0 4rem;
+}
+
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 2rem;
+}
+
+.gallery-header {
+text-align: center;
+margin-bottom: 3rem;
+}
+
+.gallery-header h1 {
+font-size: 2.5rem;
+margin-bottom: 1rem;
+color: #333;
+}
+
+.gallery-header p {
+color: #666;
+font-size: 1.1rem;
+margin-bottom: 2rem;
+}
+
+.filter-controls {
+display: flex;
+justify-content: center;
+gap: 1rem;
+flex-wrap: wrap;
+margin-bottom: 2rem;
+}
+
+.filter-btn {
+padding: 0.5rem 1.5rem;
+border: 2px solid #007bff;
+background: transparent;
+color: #007bff;
+border-radius: 20px;
+cursor: pointer;
+font-weight: 500;
+transition: all 0.3s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+background: #007bff;
+color: white;
+}
+
+.gallery-grid {
+columns: 3;
+gap: 1.5rem;
+}
+
+.no-results {
+text-align: center;
+padding: 3rem;
+color: #666;
+}
+
+@media (max-width: 1024px) {
+.gallery-grid {
+columns: 2;
+}
+}
+
+@media (max-width: 768px) {
+.gallery-grid {
+columns: 1;
+}
+
+.filter-controls {
+gap: 0.5rem;
+}
+
+.filter-btn {
+padding: 0.4rem 1rem;
+font-size: 0.9rem;
+}
+}
+
+@media (max-width: 480px) {
+.gallery-header h1 {
+font-size: 2rem;
+}
+
+.filter-controls {
+flex-direction: column;
+align-items: center;
+}
+
+.filter-btn {
+width: 200px;
+}
+}
+</style>
+```
+
+
+
+
+[工具调用] 写入文件 src/pages/About.vue
+```vue
+<template>
+<div class="about">
+<!-- Hero Section -->
+<section class="about-hero">
+<div class="container">
+<div class="hero-content">
+<h1>关于创意空间</h1>
+<p>我们是一支充满激情的设计团队，致力于为客户提供最优质的创意解决方案</p>
+</div>
+</div>
+</section>
+
+<!-- Story Section -->
+<section class="story">
+<div class="container">
+<div class="story-content">
+<div class="story-text">
+<h2>我们的故事</h2>
+<p>创意空间成立于2018年，由一群热爱设计的年轻人共同创立。我们相信好的设计能够改变世界，让生活变得更加美好。</p>
+<p>从最初的小工作室发展到如今拥有20多名专业设计师的团队，我们始终坚持"设计改变生活"的理念，为各行各业的客户提供专业的设计服务。</p>
+<p>我们的作品涵盖了品牌设计、UI/UX设计、摄影、插画等多个领域，每一个项目都倾注了我们的心血和热情。</p>
+</div>
+<div class="story-image">
+<img src="https://picsum.photos/500/400?random=20" alt="团队工作场景" />
+</div>
+</div>
+</div>
+</section>
+
+<!-- Values Section -->
+<section class="values">
+<div class="container">
+<h2>我们的价值观</h2>
+<div class="values-grid">
+<div class="value-card">
+<div class="value-icon">💡</div>
+<h3>创新</h3>
+<p>不断探索新的设计理念和技术，为客户提供前沿的创意解决方案</p>
+</div>
+<div class="value-card">
+<div class="value-icon">🎯</div>
+<h3>专业</h3>
+<p>拥有专业的设计团队和丰富的行业经验，确保每一个项目的质量</p>
+</div>
+<div class="value-card">
+<div class="value-icon">🤝</div>
+<h3>合作</h3>
+<p>与客户紧密合作，深入了解需求，共同创造卓越的设计成果</p>
+</div>
+<div class="value-card">
+<div class="value-icon">❤️</div>
+<h3>热情</h3>
+<p>对设计充满热情，用心对待每一个项目，追求极致的完美</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Team Section -->
+<section class="team">
+<div class="container">
+<h2>核心团队</h2>
+<p class="section-subtitle">认识我们优秀的团队成员</p>
+
+<div class="team-grid">
+<div class="team-member">
+<div class="member-image">
+<img src="https://picsum.photos/300/300?random=21" alt="张设计师" />
+</div>
+<div class="member-info">
+<h3>张明</h3>
+<p class="member-role">创意总监</p>
+<p class="member-desc">10年设计经验，擅长品牌策略和视觉设计</p>
+</div>
+</div>
+
+<div class="team-member">
+<div class="member-image">
+<img src="https://picsum.photos/300/300?random=22" alt="李设计师" />
+</div>
+<div class="member-info">
+<h3>李华</h3>
+<p class="member-role">UI/UX设计师</p>
+<p class="member-desc">专注于用户体验设计，精通交互设计和用户研究</p>
+</div>
+</div>
+
+<div class="team-member">
+<div class="member-image">
+<img src="https://picsum.photos/300/300?random=23" alt="王摄影师" />
+</div>
+<div class="member-info">
+<h3>王强</h3>
+<p class="member-role">首席摄影师</p>
+<p class="member-desc">资深商业摄影师，擅长产品摄影和人像摄影</p>
+</div>
+</div>
+
+<div class="team-member">
+<div class="member-image">
+<img src="https://picsum.photos/300/300?random=24" alt="陈插画师" />
+</div>
+<div class="member-info">
+<h3>陈雪</h3>
+<p class="member-role">插画设计师</p>
+<p class="member-desc">数字艺术专家，创作风格独特，作品充满想象力</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Clients Section -->
+<section class="clients">
+<div class="container">
+<h2>合作客户</h2>
+<p class="section-subtitle">我们为这些优秀的企业提供服务</p>
+
+<div class="clients-grid">
+<div class="client-logo">腾讯</div>
+<div class="client-logo">阿里巴巴</div>
+<div class="client-logo">华为</div>
+<div class="client-logo">小米</div>
+<div class="client-logo">字节跳动</div>
+<div class="client-logo">美团</div>
+</div>
+</div>
+</section>
+</div>
+</template>
+
+<script setup>
+</script>
+
+<style scoped>
+.about {
+padding-bottom: 4rem;
+}
+
+.about-hero {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+padding: 6rem 0;
+text-align: center;
+}
+
+.about-hero h1 {
+font-size: 3rem;
+margin-bottom: 1rem;
+}
+
+.about-hero p {
+font-size: 1.2rem;
+opacity: 0.9;
+}
+
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 2rem;
+}
+
+.story {
+padding: 4rem 0;
+}
+
+.story-content {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 4rem;
+align-items: center;
+}
+
+.story-text h2 {
+font-size: 2.5rem;
+margin-bottom: 2rem;
+color: #333;
+}
+
+.story-text p {
+font-size: 1.1rem;
+line-height: 1.8;
+color: #666;
+margin-bottom: 1.5rem;
+}
+
+.story-image img {
+width: 100%;
+height: auto;
+border-radius: 16px;
+box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.values {
+background: #f8f9fa;
+padding: 4rem 0;
+}
+
+.values h2 {
+text-align: center;
+font-size: 2.5rem;
+margin-bottom: 3rem;
+color: #333;
+}
+
+.values-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 2rem;
+}
+
+.value-card {
+text-align: center;
+padding: 2rem;
+background: white;
+border-radius: 12px;
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.value-icon {
+font-size: 3rem;
+margin-bottom: 1rem;
+}
+
+.value-card h3 {
+margin-bottom: 1rem;
+color: #333;
+}
+
+.value-card p {
+color: #666;
+line-height: 1.6;
+}
+
+.team {
+padding: 4rem 0;
+}
+
+.team h2 {
+text-align: center;
+font-size: 2.5rem;
+margin-bottom: 1rem;
+color: #333;
+}
+
+.section-subtitle {
+text-align: center;
+color: #666;
+margin-bottom: 3rem;
+font-size: 1.1rem;
+}
+
+.team-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+gap: 2rem;
+}
+
+.team-member {
+text-align: center;
+background: white;
+border-radius: 16px;
+padding: 2rem;
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+transition: transform 0.3s ease;
+}
+
+.team-member: hover {
+transform: translateY(-4px);
+}
+
+.member-image {
+margin-bottom: 1.5rem;
+}
+
+.member-image img {
+width: 120px;
+height: 120px;
+border-radius: 50%;
+object-fit: cover;
+margin: 0 auto;
+}
+
+.member-info h3 {
+margin-bottom: 0.5rem;
+color: #333;
+}
+
+.member-role {
+color: #007bff;
+font-weight: 600;
+margin-bottom: 0.5rem;
+}
+
+.member-desc {
+color: #666;
+line-height: 1.6;
+}
+
+.clients {
+background: #f8f9fa;
+padding: 4rem 0;
+}
+
+.clients h2 {
+text-align: center;
+font-size: 2.5rem;
+margin-bottom: 1rem;
+color: #333;
+}
+
+.clients-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+gap: 2rem;
+max-width: 800px;
+margin: 0 auto;
+}
+
+.client-logo {
+background: white;
+padding: 2rem;
+border-radius: 12px;
+text-align: center;
+font-weight: 600;
+color: #333;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+.story-content {
+grid-template-columns: 1fr;
+gap: 2rem;
+text-align: center;
+}
+
+.about-hero h1 {
+font-size: 2.2rem;
+}
+
+.values-grid,
+.team-grid {
+grid-template-columns: 1fr;
+}
+
+.clients-grid {
+grid-template-columns: repeat(2, 1fr);
+}
+}
+
+@media (max-width: 480px) {
+.clients-grid {
+grid-template-columns: 1fr;
+}
+
+.about-hero {
+padding: 4rem 0;
+}
+
+.about-hero h1 {
+font-size: 2rem;
+}
+}
+</style>
+```
+
+
+
+
+[工具调用] 写入文件 src/pages/Contact.vue
+```vue
+<template>
+<div class="contact">
+<!-- Hero Section -->
+<section class="contact-hero">
+<div class="container">
+<div class="hero-content">
+<h1>联系我们</h1>
+<p>有任何问题或合作意向，欢迎随时与我们联系</p>
+</div>
+</div>
+</section>
+
+<!-- Contact Content -->
+<section class="contact-content">
+<div class="container">
+<div class="contact-grid">
+<!-- Contact Form -->
+<div class="contact-form-section">
+<h2>发送消息</h2>
+<form @submit.prevent="submitForm" class="contact-form">
+<div class="form-group">
+<label for="name">姓名 *</label>
+<input
+type="text"
+id="name"
+v-model="form.name"
+required
+placeholder="请输入您的姓名"
+/>
+</div>
+
+<div class="form-group">
+<label for="email">邮箱 *</label>
+<input
+type="email"
+id="email"
+v-model="form.email"
+required
+placeholder="请输入您的邮箱"
+/>
+</div>
+
+<div class="form-group">
+<label for="phone">电话</label>
+<input
+type="tel"
+id="phone"
+v-model="form.phone"
+placeholder="请输入您的电话"
+/>
+</div>
+
+<div class="form-group">
+<label for="subject">主题 *</label>
+<select id="subject" v-model="form.subject" required>
+<option value="">请选择主题</option>
+<option value="design">设计咨询</option>
+<option value="cooperation">合作洽谈</option>
+<option value="feedback">意见反馈</option>
+<option value="other">其他</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="message">消息内容 *</label>
+<textarea
+id="message"
+v-model="form.message"
+required
+rows="5"
+placeholder="请详细描述您的需求或问题"
+></textarea>
+</div>
+
+<button type="submit" class="submit-btn":disabled="isSubmitting">
+{
+{
+isSubmitting ? '发送中...': '发送消息' }}
+</button>
+</form>
+</div>
+
+<!-- Contact Info -->
+<div class="contact-info-section">
+<h2>联系方式</h2>
+
+<div class="contact-info">
+<div class="info-item">
+<div class="info-icon">📍</div>
+<div class="info-content">
+<h3>地址</h3>
+<p>北京市朝阳区创意园区A座1001室</p>
+</div>
+</div>
+
+<div class="info-item">
+<div class="info-icon">📧</div>
+<div class="info-content">
+<h3>邮箱</h3>
+<p>contact@creative-studio.com</p>
+<p>info@creative-studio.com</p>
+</div>
+</div>
+
+<div class="info-item">
+<div class="info-icon">📞</div>
+<div class="info-content">
+<h3>电话</h3>
+<p>+86 138 0013 8000</p>
+<p>+86 10 8888 6666</p>
+</div>
+</div>
+
+<div class="info-item">
+<div class="info-icon">🕒</div>
+<div class="info-content">
+<h3>工作时间</h3>
+<p>周一至周五: 9: 00 - 18: 00</p>
+<p>周六: 10: 00 - 16: 00</p>
+<p>周日: 休息</p>
+</div>
+</div>
+</div>
+
+<div class="social-links">
+<h3>关注我们</h3>
+<div class="social-buttons">
+<a href="#" class="social-btn">微博</a>
+<a href="#" class="social-btn">微信</a>
+<a href="#" class="social-btn">知乎</a>
+<a href="#" class="social-btn">小红书</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Map Section -->
+<section class="map-section">
+<div class="container">
+<h2>我们的位置</h2>
+<div class="map-placeholder">
+<div class="map-content">
+<div class="map-icon">🗺️</div>
+<p>北京市朝阳区创意园区</p>
+<small>地图加载中...</small>
+</div>
+</div>
+</div>
+</section>
+</div>
+</template>
+
+<script setup>
+import {ref} from 'vue'
+
+const isSubmitting = ref(false)
+
+const form = ref({
+name: '',
+email: '',
+phone: '',
+subject: '',
+message: ''
+})
+
+const submitForm = async () => {
+isSubmitting.value = true
+
+// 模拟表单提交
+await new Promise(resolve => setTimeout(resolve, 2000))
+
+alert('消息发送成功！我们会尽快回复您。')
+
+// 重置表单
+form.value = {
+name: '',
+email: '',
+phone: '',
+subject: '',
+message: ''
+}
+
+isSubmitting.value = false
+}
+</script>
+
+<style scoped>
+.contact {
+padding-bottom: 4rem;
+}
+
+.contact-hero {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+padding: 4rem 0;
+text-align: center;
+}
+
+.contact-hero h1 {
+font-size: 2.5rem;
+margin-bottom: 1rem;
+}
+
+.contact-hero p {
+font-size: 1.1rem;
+opacity: 0.9;
+}
+
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 2rem;
+}
+
+.contact-content {
+padding: 4rem 0;
+}
+
+.contact-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 4rem;
+}
+
+.contact-form-section h2,
+.contact-info-section h2 {
+font-size: 2rem;
+margin-bottom: 2rem;
+color: #333;
+}
+
+.contact-form {
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
+}
+
+.form-group {
+display: flex;
+flex-direction: column;
+}
+
+.form-group label {
+font-weight: 600;
+margin-bottom: 0.5rem;
+color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+padding: 0.8rem;
+border: 2px solid #e9ecef;
+border-radius: 8px;
+font-size: 1rem;
+transition: border-color 0.3s ease;
+}
+
+.form-group input: focus,
+.form-group select: focus,
+.form-group textarea: focus {
+outline: none;
+border-color: #007bff;
+}
+
+.submit-btn {
+background: #007bff;
+color: white;
+padding: 1rem 2rem;
+border: none;
+border-radius: 8px;
+font-size: 1.1rem;
+font-weight: 600;
+cursor: pointer;
+transition: background 0.3s ease;
+}
+
+.submit-btn: hover: not(:disabled) {
+background: #0056b3;
+}
+
+.submit-btn:disabled {
+background: #6c757d;
+cursor: not-allowed;
+}
+
+.contact-info {
+margin-bottom: 2rem;
+}
+
+.info-item {
+display: flex;
+align-items: flex-start;
+gap: 1rem;
+margin-bottom: 1.5rem;
+padding: 1rem;
+background: #f8f9fa;
+border-radius: 8px;
+}
+
+.info-icon {
+font-size: 1.5rem;
+margin-top: 0.2rem;
+}
+
+.info-content h3 {
+margin: 0 0 0.5rem 0;
+color: #333;
+font-size: 1.1rem;
+}
+
+.info-content p {
+margin: 0.2rem 0;
+color: #666;
+}
+
+.social-links h3 {
+margin-bottom: 1rem;
+color: #333;
+}
+
+.social-buttons {
+display: flex;
+gap: 0.5rem;
+flex-wrap: wrap;
+}
+
+.social-btn {
+padding: 0.5rem 1rem;
+background: #007bff;
+color: white;
+text-decoration: none;
+border-radius: 20px;
+font-size: 0.9rem;
+transition: background 0.3s ease;
+}
+
+.social-btn: hover {
+background: #0056b3;
+}
+
+.map-section {
+background: #f8f9fa;
+padding: 4rem 0;
+}
+
+.map-section h2 {
+text-align: center;
+font-size: 2rem;
+margin-bottom: 2rem;
+color: #333;
+}
+
+.map-placeholder {
+background: white;
+border-radius: 12px;
+padding: 3rem;
+text-align: center;
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.map-icon {
+font-size: 4rem;
+margin-bottom: 1rem;
+}
+
+.map-content p {
+font-size: 1.2rem;
+color: #333;
+margin-bottom: 0.5rem;
+}
+
+.map-content small {
+color: #666;
+}
+
+@media (max-width: 768px) {
+.contact-grid {
+grid-template-columns: 1fr;
+gap: 2rem;
+}
+
+.contact-hero h1 {
+font-size: 2rem;
+}
+
+.social-buttons {
+justify-content: center;
+}
+}
+
+@media (max-width: 480px) {
+.contact-hero {
+padding: 3rem 0;
+}
+
+.contact-content {
+padding: 2rem 0;
+}
+
+.info-item {
+flex-direction: column;
+text-align: center;
+}
+
+.map-placeholder {
+padding: 2rem 1rem;
+}
+}
+</style>
+```
+
+
+
+
+[工具调用] 写入文件 src/router/index.js
+```js
+import {createRouter, createWebHashHistory} from 'vue-router'
+import Home from '@/pages/Home.vue'
+import Gallery from '@/pages/Gallery.vue'
+import About from '@/pages/About.vue'
+import Contact from '@/pages/Contact.vue'
+
+const routes = [
+{
+path: '/',
+name: 'Home',
+component: Home
+},
+{
+path: '/gallery',
+name: 'Gallery',
+component: Gallery
+},
+{
+path: '/about',
+name: 'About',
+component: About
+},
+{
+path: '/contact',
+name: 'Contact',
+component: Contact
+}
+]
+
+const router = createRouter({
+history: createWebHashHistory(),
+routes
+})
+
+export default router
+```
+
+
+
+
+[工具调用] 写入文件 src/App.vue
+```vue
+<template>
+<div class="app">
+<Header />
+<main class="main-content">
+<router-view />
+</main>
+<Footer />
+</div>
+</template>
+
+<script setup>
+import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
+</script>
+
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+sans-serif;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+line-height: 1.6;
+color: #333;
+}
+
+.app {
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+}
+
+.main-content {
+flex: 1;
+padding-top: 80px; /* 为固定头部留出空间 */
+}
+
+/* 通用样式 */
+.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 2rem;
+}
+
+.btn {
+display: inline-block;
+padding: 0.8rem 1.5rem;
+border: none;
+border-radius: 6px;
+text-decoration: none;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s ease;
+text-align: center;
+}
+
+.btn-primary {
+background: #007bff;
+color: white;
+}
+
+.btn-primary: hover {
+background: #0056b3;
+}
+
+.btn-secondary {
+background: #6c757d;
+color: white;
+}
+
+.btn-secondary: hover {
+background: #545b62;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+.container {
+padding: 0 1rem;
+}
+
+.main-content {
+padding-top: 70px;
+}
+}
+
+/* 动画效果 */
+.fade-enter-active,
+.fade-leave-active {
+transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+opacity: 0;
+}
+
+/* 滚动条样式 */:: -webkit-scrollbar {
+width: 8px;
+}:: -webkit-scrollbar-track {
+background: #f1f1f1;
+}:: -webkit-scrollbar-thumb {
+background: #c1c1c1;
+border-radius: 4px;
+}::-webkit-scrollbar-thumb: hover {
+background: #a8a8a8;
+}
+</style>
+```
+
+
+
+
+[工具调用] 写入文件 src/main.js
+```js
+import {createApp} from 'vue'
+import App from './App.vue'
+import router from './router'
+
+createApp(App).use(router).mount('#app')
+```
+
+
+
+
+[工具调用] 写入文件 index.html
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" type="image/svg+xml" href="/vite.svg" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>创意空间 - 专业设计工作室</title>
+<meta name="description" content="创意空间是一家专业的设计工作室，提供品牌设计、UI/UX设计、摄影等创意服务。" />
+</head>
+<body>
+<div id="app"></div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
+```
+
+
+
+
+[工具调用] 写入文件 vite.config.js
+```js
+import {defineConfig} from 'vite'
+import vue from '@vitejs/plugin-vue'
+import {fileURLToPath, URL} from 'node:url'
+
+export default defineConfig({
+base: './',
+plugins: [vue()],
+resolve: {
+alias: {
+'@': fileURLToPath(new URL('./src', import.meta.url))
+}
+}
+})
+```
+
+
+
+
+[工具调用] 写入文件 package.json
+```json
+{
+"name": "creative-studio",
+"private": true,
+"version": "1.0.0",
+"type": "module",
+"scripts": {
+"dev": "vite",
+"build": "vite build",
+"preview": "vite preview"
+},
+"dependencies": {
+"vue": "^3.3.4",
+"vue-router": "^4.2.4"
+},
+"devDependencies": {
+"@vitejs/plugin-vue": "^4.2.3",
+"vite": "^4.4.5"
+}
+}
+```
+
+
+
+
+[工具调用] 写入文件 README.md
+```md
+# 创意空间设计工作室
+
+一个现代化的创意设计工作室网站，展示设计作品和服务。
+
+## 功能特性
+
+- 响应式设计，支持移动端和桌面端
+- 作品集展示和分类筛选
+- 联系表单功能
+- 现代化的用户界面
+
+## 技术栈
+
+- Vue 3 (Composition API)
+- Vue Router 4
+- Vite
+- 原生 CSS
+```
+
+
+网站生成计划：创建一个创意设计工作室网站，包含首页、作品集、关于我们和联系页面，采用现代化设计风格，支持响应式布局。
+
+项目生成完毕。
