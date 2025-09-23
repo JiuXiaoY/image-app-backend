@@ -68,15 +68,18 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         QueryWrapper qw = QueryWrapper.create();
         qw.from(App.class);
         if (StrUtil.isNotBlank(dto.getAppName())) {
-            qw.where("appName like ?", "%" + dto.getAppName() + "%");
+            qw.like(App::getAppName, dto.getAppName());
         }
         if (ObjectUtil.isNotNull(dto.getUserId())) {
-            qw.and("userId = ?", dto.getUserId());
+            qw.and(App::getUserId).eq(dto.getUserId());
         }
         if (ObjectUtil.isNotNull(dto.getPriority())) {
-            qw.and("priority = ?", dto.getPriority());
+            qw.and(App::getPriority).eq(99);
         }
-        return qw.orderBy("priority desc, updateTime desc");
+        // 按优先级、更新时间倒序
+        qw.orderBy(App::getPriority, false);
+        qw.orderBy(App::getUpdateTime, false);
+        return qw;
     }
 
     @Override
@@ -84,24 +87,27 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         QueryWrapper qw = QueryWrapper.create();
         qw.from(App.class);
         if (StrUtil.isNotBlank(dto.getAppName())) {
-            qw.where("appName like ?", "%" + dto.getAppName() + "%");
+            qw.like(App::getAppName, dto.getAppName());
         }
         if (StrUtil.isNotBlank(dto.getCover())) {
-            qw.and("cover like ?", "%" + dto.getCover() + "%");
+            qw.and(App::getCover).like(dto.getCover());
         }
         if (StrUtil.isNotBlank(dto.getCodeGenType())) {
-            qw.and("codeGenType = ?", dto.getCodeGenType());
+            qw.and(App::getCodeGenType).eq(dto.getCodeGenType());
         }
         if (StrUtil.isNotBlank(dto.getDeployKey())) {
-            qw.and("deployKey = ?", dto.getDeployKey());
+            qw.and(App::getDeployKey).eq(dto.getDeployKey());
         }
         if (ObjectUtil.isNotNull(dto.getPriority())) {
-            qw.and("priority = ?", dto.getPriority());
+            qw.and(App::getPriority).eq(dto.getPriority());
         }
         if (ObjectUtil.isNotNull(dto.getUserId())) {
-            qw.and("userId = ?", dto.getUserId());
+            qw.and(App::getUserId).eq(dto.getUserId());
         }
-        return qw.orderBy("priority desc, updateTime desc");
+        // 按优先级、更新时间倒序
+        qw.orderBy(App::getPriority, false);
+        qw.orderBy(App::getUpdateTime, false);
+        return qw;
     }
 
     @Override
