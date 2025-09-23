@@ -67,13 +67,12 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
     public QueryWrapper buildUserQuery(AppDto dto) {
         QueryWrapper qw = QueryWrapper.create();
         qw.from(App.class);
-        if (StrUtil.isNotBlank(dto.getAppName())) {
-            qw.like(App::getAppName, dto.getAppName());
-        }
         if (ObjectUtil.isNotNull(dto.getUserId())) {
             qw.and(App::getUserId).eq(dto.getUserId());
         }
-        qw.and(App::getPriority).eq(99);
+        if (ObjectUtil.isNotNull(dto.getPriority())) {
+            qw.and(App::getPriority).eq(dto.getPriority());
+        }
         // 按优先级、更新时间倒序
         qw.orderBy(App::getPriority, false);
         qw.orderBy(App::getUpdateTime, false);

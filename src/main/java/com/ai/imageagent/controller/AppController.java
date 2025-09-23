@@ -133,6 +133,7 @@ public class AppController {
     @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
     public BaseResponse<Page<App>> pageFeatured(@RequestBody AppDto dto) {
         // 精选：按优先级倒序、名称过滤，由 service 的 userQuery 满足
+        dto.setPriority(99);
         return ResultUtils.success(appService.pageByDto(dto, false));
     }
 
