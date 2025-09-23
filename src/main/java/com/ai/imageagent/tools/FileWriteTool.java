@@ -74,7 +74,7 @@ public class FileWriteTool extends BaseTool{
             if (generated.contains(normalizedKey)) {
                 log.info("duplicate file output detected, appId: {}, file: {}", appId, normalizedKey);
                 return "检测到重复文件输出，已生成过该文件: " + relativeFilePath +
-                        "。请不要从头重复构建，若已完成请调用【退出工具调用】结束。";
+                        "。请不要从头重复构建，请停止输出，停止任何工具调用，给出最终结果即可";
             }
 
             Path path = Paths.get(relativeFilePath);
