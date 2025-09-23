@@ -73,9 +73,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         if (ObjectUtil.isNotNull(dto.getUserId())) {
             qw.and(App::getUserId).eq(dto.getUserId());
         }
-        if (ObjectUtil.isNotNull(dto.getPriority())) {
-            qw.and(App::getPriority).eq(99);
-        }
+        qw.and(App::getPriority).eq(99);
         // 按优先级、更新时间倒序
         qw.orderBy(App::getPriority, false);
         qw.orderBy(App::getUpdateTime, false);
