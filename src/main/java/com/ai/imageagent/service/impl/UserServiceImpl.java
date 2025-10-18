@@ -15,6 +15,7 @@ import com.ai.imageagent.mapper.UserMapper;
 import com.ai.imageagent.service.UserService;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author chenqj
  */
+@Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
@@ -97,8 +99,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public User getLoginUser(HttpServletRequest request) {
+        // 预检请求另外处理
+        if (request.getMethod().equals(CommonConstant.HTTP_METHOD_OPTIONS)) {
+            log.info("预检请求,不做任何处理......");
+            return null;
+        }
         // 先判断是否已登录
         Object userObj = request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
+        log.info("非预检请求，{}", userObj);
         User currentUser = (User) userObj;
         if (currentUser == null || currentUser.getId() == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);

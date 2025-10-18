@@ -15,5 +15,9 @@ public interface CommonConstant {
      * 降序
      */
     String SORT_ORDER_DESC = " descend";
-    
+
+    /**
+     * 请求方法
+     */
+    String HTTP_METHOD_OPTIONS = "OPTIONS";
 }
