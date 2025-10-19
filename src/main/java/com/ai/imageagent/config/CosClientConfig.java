@@ -45,6 +45,11 @@ public class CosClientConfig {
      */
     private String bucket;
 
+    /**
+     * 是否需要签名URL（默认false，使用公开访问URL）
+     */
+    private boolean needSignature;
+
     @Bean
     public COSClient cosClient() {
         // 初始化用户身份信息(secretId, secretKey)

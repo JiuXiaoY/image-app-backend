@@ -62,7 +62,7 @@ public class ScreenshotServiceImpl implements ScreenshotService {
         String cosKey = generateScreenshotKey(fileName);
         String uploadFileReturn = cosManager.uploadFile(cosKey, screenshotFile);
         log.info("截图文件上传成功: {} -> {}", localScreenshotPath, uploadFileReturn);
-        return cosManager.getFileUrl(cosKey, 60 * 60 * 24 * 7);
+        return uploadFileReturn;
     }
 
     /**

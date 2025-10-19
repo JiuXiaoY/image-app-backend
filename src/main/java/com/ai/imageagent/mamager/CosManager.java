@@ -61,13 +61,49 @@ public class CosManager {
     }
 
     /**
-     * 获取文件的可访问 URL（带签名，适用于私有读）
+     * 获取文件的可访问 URL（根据配置决定是否使用签名）
+     *
+     * @param key COS对象键（完整路径，例如 "images/test.jpg"）
+     * @param expireSeconds URL有效期（秒，仅签名URL有效）
+     * @return 可访问的URL
+     */
+    public String getFileUrl(String key, long expireSeconds) {
+        if (cosClientConfig.isNeedSignature()) {
+            return getSignedFileUrl(key, expireSeconds);
+        } else {
+            return getPublicFileUrl(key);
+        }
+    }
+
+    /**
+     * 获取文件的公开访问 URL（无需签名）
+     *
+     * @param key COS对象键（完整路径，例如 "images/test.jpg"）
+     * @return 公开访问的URL
+     */
+    public String getPublicFileUrl(String key) {
+        try {
+            // 构建公开访问URL
+            String url = String.format("https://%s.cos.%s.myqcloud.com/%s",
+                    cosClientConfig.getBucket(),
+                    cosClientConfig.getRegion(),
+                    key);
+            log.info("生成公开访问URL: {}", url);
+            return url;
+        } catch (Exception e) {
+            log.error("生成公开访问URL失败，key={}", key, e);
+            return null;
+        }
+    }
+
+    /**
+     * 获取文件的签名访问 URL（带签名，适用于私有读）
      *
      * @param key COS对象键（完整路径，例如 "images/test.jpg"）
      * @param expireSeconds URL有效期（秒）
      * @return 可访问的签名 URL
      */
-    public String getFileUrl(String key, long expireSeconds) {
+    public String getSignedFileUrl(String key, long expireSeconds) {
         try {
             // 设置过期时间
             Date expiration = new Date(System.currentTimeMillis() + expireSeconds * 1000);
@@ -78,9 +114,10 @@ public class CosManager {
                     key,
                     expiration
             );
+            log.info("生成签名访问URL: {}", url.toString());
             return url.toString();
         } catch (Exception e) {
-            log.error("生成文件访问URL失败，key={}", key, e);
+            log.error("生成签名访问URL失败，key={}", key, e);
             return null;
         }
     }
