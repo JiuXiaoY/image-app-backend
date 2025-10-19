@@ -9,7 +9,7 @@ import com.ai.imageagent.exception.BusinessException;
 /**
  * 多文件代码保存器
  *
- * @author yupi
+ * @author chenqj
  */
 public class MultiFileCodeFileSaverTemplate extends CodeFileSaverTemplate<MultiFileCodeResult> {
 

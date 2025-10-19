@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 /**
  * AI代码生成类型路由服务工厂
  *
- * @author yupi
+ * @author chenqj
  */
 @Slf4j
 @Configuration

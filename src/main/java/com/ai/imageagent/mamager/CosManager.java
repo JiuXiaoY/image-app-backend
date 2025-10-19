@@ -15,7 +15,7 @@ import java.util.Date;
 /**
  * COS对象存储管理器
  *
- * @author yupi
+ * @author chenqj
  */
 @Component
 @Slf4j
